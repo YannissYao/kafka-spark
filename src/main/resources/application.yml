@@ -50,6 +50,8 @@ spring:
         template_update_delay: 0
         classic_compatible: true
 
+logging:
+  config: classpath:log4j2.yml
 
 #redis配置
 #  redis:

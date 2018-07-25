@@ -3,6 +3,8 @@ package com.joeysin.consumer;
 import com.joeysin.App;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.common.TopicPartition;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.streaming.Durations;
@@ -18,7 +20,10 @@ import scala.Serializable;
 import scala.Tuple2;
 
 import javax.annotation.PostConstruct;
-import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -28,6 +33,7 @@ import java.util.concurrent.atomic.AtomicLong;
 @Component
 public class SparkStreamingKafka implements Serializable {
 
+    private static Logger LOGGER = LogManager.getLogger(SparkStreamingKafka.class);
     @Value("${spring.kafka.bootstrap-servers}")
     private String kafkaBroker;
     @Value("${spring.kafka.consumer.group-id}")
@@ -43,9 +49,12 @@ public class SparkStreamingKafka implements Serializable {
     Thread refreshTime = new Thread(new Runnable() {
         @Override
         public void run() {
-            now[0] = new SimpleDateFormat("HH:mm:ss").format(new Date());
+//            ZoneId zoneId = ZoneId.of(ZoneId.SHORT_IDS.get("ACT"));
+//            LOGGER.info("=========================================================" + ZonedDateTime.of(LocalDateTime.now(), zoneId));
+            now[0] = LocalTime.now().toString().intern();
         }
     });
+
 
     /**
      * Created by Joeysin on  2018/7/11  下午5:11.
@@ -97,8 +106,6 @@ public class SparkStreamingKafka implements Serializable {
                 }).reduceByKey((x, y) -> x + y);
 
         counts.print();
-
-
         ssc.start();
         ssc.awaitTermination();
         ssc.close();

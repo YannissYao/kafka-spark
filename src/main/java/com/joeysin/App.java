@@ -2,12 +2,10 @@ package com.joeysin;
 
 
 import com.google.common.collect.Maps;
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.data.redis.core.RedisTemplate;
 
 import javax.annotation.PostConstruct;
 import java.util.Collections;
@@ -15,13 +13,11 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
 
-//import org.springframework.kafka.core.KafkaTemplate;
-
 @SpringBootApplication
+@Slf4j
 public class App {
-    private static final Logger LOGGER = Logger.getLogger(App.class);
-//        @Autowired
-//    KafkaTemplate kafkaTemplate;
+//    @Autowired
+//    private KafkaTemplate kafkaTemplate;
 //    @Autowired
 //    RedisTemplate redisTemplate;
 
@@ -29,7 +25,6 @@ public class App {
     private String TOPIC;
 
     private static Map<Object, Object> localCache;
-
 
     public static void main(String[] args) {
         SpringApplication.run(App.class, args);
@@ -61,7 +56,7 @@ public class App {
                     int random = new Random().nextInt(5000);
                     String payload = "Joeysin_" + String.valueOf(random);
 //                    kafkaTemplate.send(TOPIC, payload);
-                    LOGGER.info(payload);
+                    log.info(payload);
                     try {
                         Thread.sleep(random);
                     } catch (InterruptedException e) {

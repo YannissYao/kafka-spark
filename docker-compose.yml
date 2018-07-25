@@ -6,8 +6,11 @@ services:
         build: .
         networks:
           - mybridge
-        links:
+        depends_on:
           - kafka
+        environment:
+          KAFKA_BROKE: kafka:9092
+          KAFKA_TOPIC: test_topic
         ports:
           - "8080:8080"
           - "4040:4040"
@@ -28,7 +31,7 @@ services:
         image: wurstmeister/kafka
         networks:
           - mybridge
-        links:
+        depends_on:
           - zookeeper
         ports:
           - "9092:9092"
@@ -39,8 +42,12 @@ services:
           KAFKA_BROKER_ID: 1
           ZK: zookeeper
           KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+          KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+          KAFKA_CREATE_TOPICS: "test_topic,topic_1"
         hostname: kafka
         container_name: kafka
+
+
 
 
 
