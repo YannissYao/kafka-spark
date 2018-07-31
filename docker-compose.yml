@@ -8,12 +8,18 @@ services:
           - mybridge
         depends_on:
           - kafka
+          - fluentd
         environment:
           KAFKA_BROKE: kafka:9092
           KAFKA_TOPIC: test_topic
         ports:
           - "8080:8080"
           - "4040:4040"
+        logging:
+          driver: fluentd
+          options:
+            fluentd-address: 127.0.0.1:24224
+            tag: kafka-spark
         hostname: kafka-spark
         image: kafka-spark
         container_name: kafka-spark
@@ -22,8 +28,8 @@ services:
         image: wurstmeister/zookeeper
         networks:
           - mybridge
-        ports:
-          - "2181:2181"
+        expose:
+          - 2181
         container_name: zookeeper
         hostname: zookeeper
 
@@ -31,10 +37,10 @@ services:
         image: wurstmeister/kafka
         networks:
           - mybridge
-        depends_on:
+        links:
           - zookeeper
-        ports:
-          - "9092:9092"
+        expose:
+          - 9092
         environment:
           HOST_IP: kafka
           KAFKA_ADVERTISED_HOST_NAME: kafka
@@ -43,10 +49,37 @@ services:
           ZK: zookeeper
           KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
           KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-          KAFKA_CREATE_TOPICS: "test_topic,topic_1"
+          KAFKA_CREATE_TOPICS: "test_topic"
         hostname: kafka
         container_name: kafka
 
+      fluentd:
+        build: ./fluentd
+        networks:
+          - mybridge
+        volumes:
+          - ./fluentd/conf:/fluentd/etc
+        depends_on:
+          - elasticsearch
+        ports:
+          - "24224:24224"
+#          - "24224:24224/udp"
+
+      elasticsearch:
+        image: elasticsearch
+        networks:
+          - mybridge
+        expose:
+          - 9200
+
+      kibana:
+        image: kibana
+        networks:
+          - mybridge
+        depends_on:
+          - elasticsearch
+        ports:
+          - "5601:5601"
 
 
 

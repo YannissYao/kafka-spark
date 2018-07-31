@@ -2,16 +2,16 @@ Configuration:
   status: error
   Properties: # 定义全局变量
       Property: # 缺省配置（用于开发环境）。其他环境需要在VM参数中指定，如下：
-        - name: kafka_broke
+        - name: kafka.broke
           value: ${env:KAFKA_BROKE}
-        - name: kafka_topic
+        - name: kafka.topic
           value: ${env:KAFKA_TOPIC}
-        - name: console_pattern_layout
+        - name: console.pattern.layout
           value: '%highlight{%d{yyyy-MM-dd HH:mm:ss.SSS} [%5level][%logger{36}]-(%t)} %m%n'
-        - name: pattern_layout
+        - name: pattern.layout
           value: '%d{yyyy-MM-dd HH:mm:ss.SSS} [%5level][%logger{36}]-(%t) %m%n'
         - name: log.path
-          value: ./logs
+          value: /logs
         - name: log.name
           value: log
  # 输出到控制台
@@ -24,37 +24,37 @@ Configuration:
         onMatch: accept
         onMismatch: deny
       PatternLayout:
-        pattern: ${console_pattern_layout}
+        pattern: ${console.pattern.layout}
 
 #RollingFile: 输出到文件,超过128MB||一天归档
-    RollingFile:
-      - name: ROLLING_FILE
-        ignoreExceptions: false
-        fileName: ${log.path}/${log.name}.log
-        filePattern: ${log.path}/$${date:yyyy-MM}/${log.name}-%d{yyyy-MM-dd}-%i.log.gz
-        PatternLayout:
-          pattern: ${pattern_layout}
-        Policies:
-          TimeBasedTriggeringPolicy:  # 按天分类
-           modulate: true
-           interval: 1
-          SizeBasedTriggeringPolicy:
-            size: "128 MB"
-        DefaultRolloverStrategy:
-          max: 1000
+#    RollingFile:
+#      - name: ROLLING_FILE
+#        ignoreExceptions: false
+#        fileName: ${log.path}/${log.name}.log
+#        filePattern: ${log.path}/$${date:yyyy-MM}/${log.name}-%d{yyyy-MM-dd}-%i.log.gz
+#        PatternLayout:
+#          pattern: ${pattern.layout}
+#        Policies:
+#          TimeBasedTriggeringPolicy:  # 按天分类
+#           modulate: true
+#           interval: 1
+#          SizeBasedTriggeringPolicy:
+#            size: "128 MB"
+#        DefaultRolloverStrategy:
+#          max: 1000
 #kafka 配置
     Kafka:  # 输出到kafka
       - name: KAFKA
-        topic: ${kafka_topic}  # 如果kafka集群中没有此topic，会自动创建1分区1副本的topic；如果需要多分区多副本，可以预先在kafka集群中创建好
+        topic: ${kafka.topic}  # 如果kafka集群中没有此topic，会自动创建1分区1副本的topic；如果需要多分区多副本，可以预先在kafka集群中创建好
         ThresholdFilter:  # 过滤条件，只发送info以上级别的日志
           level: info
           onMatch: accept
           onMismatch: deny
         PatternLayout:
-          pattern: ${console_pattern_layout}
+          pattern: ${console.pattern.layout}
         Property:
           name: bootstrap.servers
-          value: ${kafka_broke}
+          value: ${kafka.broke}
 
 
   Loggers:
@@ -67,7 +67,8 @@ Configuration:
         additivity: false
         level: info
         AppenderRef:
+          - ref: CONSOLE
           - ref: KAFKA
-          - ref: ROLLING_FILE
+#          - ref: ROLLING_FILE
       - name: org.apache.kafka  # 避免递归调用
         level: info

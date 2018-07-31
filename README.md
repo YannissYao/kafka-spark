@@ -1,13 +1,21 @@
-kafka版本：0.10
+Kafka version：0.10
 
-spark版本：2.11
+Spark version：2.11
+
+Elasticsearch version: 5.6.10
+
+Fluentd version: 0.12
+
+Kibana version: 5.6.10
 
 
-工程描述：
+Description：
 
-    主要功能:
-        kafka集成log4j发送日志与sparkStream对接做日志准实时批处理&附带监控页面
-    实现过程:
+    Main Function:
+        1.kafka集成log4j2发送日志与sparkStream对接做日志准实时批处理 
+        2.EFK日志收集
+        
+    Design ideas:
         1.App.simulationUserBehavior()模拟生成用户信息
         2.SparkStreamingKafka.reveiveKafkaStream() 流计算结果放入本地缓存
         3.AjaxController.getData()对外提供查询接口
@@ -15,25 +23,29 @@ spark版本：2.11
 
 Echart-ui:
 
-    功能：实时计算结果显示
+    Function：Show quasi-real-time calculation results ![如图](https://github.com/Joeysin/kafka-spark/blob/master/images/kafka_spark_ui.png)  
     URL： http://127.0.0.1:8080
    
-
+kinaba:
+    
+    Function：Visualize and manage your log ![Init Kibana](https://github.com/Joeysin/kafka-spark/blob/master/images/Kibana_init.png)  ![Visualize](https://github.com/Joeysin/kafka-spark/blob/master/images/Kibana.png) 
+    URL: localhost:http://127.0.0.1:5601
+    
 Spark-ui:
 
-    功能：Spark-Admin管理界面
+    Function：Spark-Admin ui page
     URL: localhost:http://127.0.0.1:4040
+    
+   
 
+How to Start：
 
-启动过程：
-
-    1.打开本地Docker
-    2.打开log4j.properties配置文件把第七行ip改成自己本地ip（properties文件无法解析Docker link 容器的ip）
+    1.首先打开本地Docker,需要把Docker内存设置的大一点 ![如图](https://github.com/Joeysin/kafka-spark/blob/master/images/Docker_memery_fix.png)  
     3.进入工程目录执行 mvn clean package -DskipTests
-    4.进入工程目录执行 docker-compose up
-    5.启动后浏览器可访问上面两个ui页（Echart-ui & Spark-ui）
+    4.进入工程目录执行 docker-compose up -d
+    5.启动后浏览器可访问上面几个ui页（Echart-ui && Spark-ui && kibana-ui）
     
     
-关闭过程：
+How to stop：
 
     1.进入工程目录执行 docker-compose down
