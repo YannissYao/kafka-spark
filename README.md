@@ -20,12 +20,12 @@ Description：
         2.SparkStreamingKafka.reveiveKafkaStream() 流计算结果放入本地缓存
         3.AjaxController.getData()对外提供查询接口
 
-Echart-ui: [如图](https://github.com/Joeysin/kafka-spark/blob/master/images/kafka_spark_ui.png?raw=true)  
+Echart-ui:  [如图](https://github.com/Joeysin/kafka-spark/blob/master/images/kafka_spark_ui.png?raw=true)  
 
     Function：Show quasi-real-time calculation results 
     URL： http://127.0.0.1:8080
    
-kinaba: [Init Kibana](https://github.com/Joeysin/kafka-spark/blob/master/images/Kibana_init.png?raw=true)  [Visualize](https://github.com/Joeysin/kafka-spark/blob/master/images/Kibana.png?raw=true) 
+kinaba:  [Init Kibana](https://github.com/Joeysin/kafka-spark/blob/master/images/Kibana_init.png?raw=true)    [Visualize](https://github.com/Joeysin/kafka-spark/blob/master/images/Kibana.png?raw=true) 
     
     Function：Visualize and manage your log  
     URL: localhost:http://127.0.0.1:5601
@@ -37,7 +37,7 @@ Spark-ui:
     
    
 
-How to Start:[如图](https://github.com/Joeysin/kafka-spark/blob/master/images/Docker_memery_fix.png?raw=true)  
+How to Start: [必须调大Docker内存](https://github.com/Joeysin/kafka-spark/blob/master/images/Docker_memery_fix.png?raw=true)  
 
     1.首先打开本地Docker,需要把Docker内存设置的大一点 
     3.进入工程目录执行 mvn clean package -DskipTests
